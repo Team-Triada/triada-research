@@ -1,26 +1,339 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@font-face {
+  font-family: 'Telegraf';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/Telegraf-Regular.woff') format('woff');
 }
+
+@font-face {
+  font-family: 'Telegraf';
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url('/fonts/Telegraf-UltraLight.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Telegraf';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/Telegraf-UltraBold.woff') format('woff');
+}
+
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-mono);
+  --color-border: var(--border);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  --radius: 0.625rem;
+  /* Brand red accent (named "cyan" for legacy reasons - value is red) */
+  --triada-cyan: #ff3c3c;
+  --triada-cyan-dim: rgba(255, 60, 60, 0.15);
+  --background: #0c0c0e;
+  --foreground: #e8eaed;
+  --card: #111315;
+  --card-foreground: #e8eaed;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-strong: rgba(255, 255, 255, 0.12);
+  --muted: #1a1c1f;
+  --muted-foreground: #6b7380;
+  --accent: var(--triada-cyan);
 }
 
 body {
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) var(--background);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 100px;
+  border: 2px solid var(--background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--triada-cyan);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Telegraf', var(--font-inter), sans-serif;
+}
+
+::selection {
+  background: var(--triada-cyan);
+  color: #000;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(255, 60, 60, 0.7);
+  outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.text-cyan {
+  color: var(--triada-cyan);
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  display: block;
+  margin-bottom: 18px;
+}
+
+.heading-hero {
+  font-family: 'Telegraf', sans-serif;
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--triada-cyan);
+  margin: 0;
+}
+
+.heading-section {
+  font-family: 'Telegraf', sans-serif;
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: #ffffff;
+  margin: 0;
+}
+
+.heading-card {
+  font-family: 'Telegraf', sans-serif;
+  font-weight: 500;
+  line-height: 1.3;
+  color: #ffffff;
+  margin: 0;
+}
+
+.card-surface {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: border-color 0.3s ease;
+}
+
+.card-surface:hover {
+  border-color: var(--border-strong);
+}
+
+.mdx-body > :first-child {
+  margin-top: 0 !important;
+}
+
+.mdx-body > :last-child {
+  margin-bottom: 0 !important;
+}
+
+.mdx-body a code {
+  color: inherit;
+}
+
+/* GitBook-style code blocks (paired with components/mdx-pre.tsx).
+   No margin-top: every element in .mdx-body sets margin-bottom only, so the
+   gap above any block always comes from the preceding element (consistent
+   rhythm, no margin-collapse fights between neighbors). */
+[data-rehype-pretty-code-figure] {
+  margin: 0 0 20px;
+}
+
+.code-card {
+  position: relative;
+  background: #0a0b0d;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.code-card-copy {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: #7a8190;
+  background: rgba(20, 21, 24, 0.8);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.code-card:hover .code-card-copy,
+.code-card-copy:focus-visible {
+  opacity: 1;
+}
+
+.code-card-copy:hover {
+  color: #ffffff;
+  border-color: var(--border-strong);
+}
+
+.code-card pre {
+  margin: 0;
+  padding: 22px 24px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.7;
+  background: transparent;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.code-card pre::-webkit-scrollbar {
+  height: 8px;
+}
+
+.code-card pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.code-card pre::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 100px;
+}
+
+.code-card pre::-webkit-scrollbar-thumb:hover {
+  background-color: var(--triada-cyan);
+}
+
+.code-card pre code {
+  background: transparent;
+  font-family: var(--font-mono);
+  counter-reset: line;
+}
+
+.code-card [data-line] {
+  padding: 0 2px;
+}
+
+@layer components {
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(180deg, #e83535 0%, #c42424 100%);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 13px 28px;
+    border-radius: 100px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 0 #8a1010, 0 4px 16px rgba(200,30,30,0.35);
+    letter-spacing: 0.01em;
+    transition: filter 0.15s, box-shadow 0.15s;
+    white-space: nowrap;
+  }
+  .btn-primary:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 2px 0 #8a1010, 0 6px 22px rgba(200,30,30,0.45);
+  }
+}
+
+.red {
+  color: #ff3c3c !important;
+  -webkit-text-fill-color: #ff3c3c !important;
+}
+
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.pill-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 12px;
+  color: #c8cdd5;
+  background: var(--card);
+}
+
+/* Horizontal swipe row for tag pills: no wrapping, scrolls instead,
+   with a right-edge fade hinting there's more to scroll to. */
+.tag-scroll-wrap {
+  position: relative;
+  margin-left: -4px;
+  margin-right: -4px;
+}
+
+.tag-scroll {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 2px 20px 6px 4px;
+}
+
+.tag-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.tag-scroll > * {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.tag-scroll-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 6px;
+  width: 56px;
+  background: linear-gradient(to right, transparent, var(--background) 85%);
+  pointer-events: none;
 }
