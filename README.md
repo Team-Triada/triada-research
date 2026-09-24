@@ -5,6 +5,21 @@ defensive security write-ups, CTF postmortems, and vulnerability research.
 
 Live at **[research.triada.in](https://research.triada.in)**.
 
+## What this is
+
+A file-based blog: every post is an `.mdx` file in `content/posts/`, no CMS, no
+database. Write it, commit, push, it's live. Styled to match the main
+[triada.in](https://triada.in) site (dark theme, red accent, same fonts).
+
+Key features:
+
+- Tag-based browsing (`/tags`, `/research` with a client-side filter)
+- Auto-generated social share image per post, no image to design
+- RSS feed, full SEO (JSON-LD structured data, sitemap, canonical URLs)
+- GitBook-style code blocks with copy buttons and syntax highlighting
+- Sidebar table of contents with scroll-spy
+- Live-rendered [Mermaid](https://mermaid.js.org) diagrams in posts
+
 ## Stack
 
 - [Next.js 16](https://nextjs.org) (App Router, Turbopack), built as a **static export**,
