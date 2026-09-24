@@ -4,6 +4,8 @@ import rehypeSlug from "rehype-slug";
 import rehypePrettyCode from "rehype-pretty-code";
 import type { AnchorHTMLAttributes, HTMLAttributes, ImgHTMLAttributes } from "react";
 import { Pre } from "./mdx-pre";
+import { Mermaid } from "./mermaid";
+import { remarkMermaid } from "@/lib/remark-mermaid";
 
 const components = {
   h2: (props: HTMLAttributes<HTMLHeadingElement>) => (
@@ -32,9 +34,10 @@ const components = {
   a: (props: AnchorHTMLAttributes<HTMLAnchorElement>) => (
     <a className="text-cyan underline underline-offset-4 decoration-[rgba(255,60,60,0.4)] hover:decoration-current" {...props} />
   ),
-  img: (props: ImgHTMLAttributes<HTMLImageElement>) => (
+  img: ({ alt, ...props }: ImgHTMLAttributes<HTMLImageElement>) => (
     // eslint-disable-next-line @next/next/no-img-element
     <img
+      alt={alt ?? ""}
       className="rounded-lg"
       style={{ maxWidth: "100%", height: "auto", border: "1px solid var(--border)", marginBottom: 20 }}
       loading="lazy"
@@ -78,6 +81,7 @@ const components = {
     );
   },
   pre: Pre,
+  Mermaid,
   blockquote: (props: HTMLAttributes<HTMLQuoteElement>) => (
     <blockquote
       className="py-1 pl-5 italic leading-[1.75]"
@@ -111,7 +115,7 @@ export function MdxContent({ source }: { source: string }) {
         components={components}
         options={{
           mdxOptions: {
-            remarkPlugins: [remarkGfm],
+            remarkPlugins: [remarkGfm, remarkMermaid],
             rehypePlugins: [
               rehypeSlug,
               [

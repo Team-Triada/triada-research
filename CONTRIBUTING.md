@@ -82,6 +82,9 @@ draft: true
 - **Images:** put files under `public/images/posts/<your-slug>/`, reference with
   standard Markdown `![alt text](/images/posts/your-slug/file.png)`. Alt text is not
   optional, describe what's actually in the image.
+- **Diagrams:** a ` ```mermaid ` code block renders as a live diagram (flowchart,
+  sequence, timeline), not syntax-highlighted text. Use it for attack flows, decision
+  trees, or timelines instead of describing them in prose.
 - **Links:** standard Markdown `[text](url)`.
 
 ## What happens automatically

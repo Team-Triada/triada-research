@@ -36,6 +36,19 @@ Always tag the language for syntax highlighting. Use `bash` for shell commands,
 curl -s https://example.tld/api | jq '.data[]'
 ```
 
+## Diagrams
+
+Use a ` ```mermaid ` code block for flowcharts, sequence diagrams, or timelines.
+It renders as a live diagram, not a code block, no image to export or upload.
+
+```mermaid
+flowchart LR
+  A[Recon] --> B[Find something interesting]
+  B --> C{Exploitable?}
+  C -->|Yes| D[Confirm impact]
+  C -->|No| A
+```
+
 ## Inline code and emphasis
 
 Use single backticks for `file names`, `commands`, `variable_names`, and
