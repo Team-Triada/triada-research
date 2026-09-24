@@ -1,0 +1,34 @@
+---
+title: "SSRF via WordPress XML-RPC Pingback: A Recurring Finding"
+description: "How the decade-old pingback.ping method still yields SSRF and brute-force amplification on WordPress targets in 2026."
+date: "2026-06-10"
+author: "Adarsh SR"
+authorAvatar: "/images/team/Adarsh_triada.png"
+tags: ["ssrf", "wordpress", "web"]
+draft: false
+---
+
+WordPress's `xmlrpc.php` endpoint is one of the oldest attack surfaces in the CMS ecosystem, and it still turns up live findings on engagements today. Two techniques from that endpoint keep paying off:
+
+## 1. `pingback.ping` as an SSRF primitive
+
+The pingback mechanism lets a post notify another URL that it was linked. The `pingback.ping` XML-RPC method accepts a source URL and a target post, and the server fetches the source URL server-side to verify the link exists. That server-side fetch is the SSRF.
+
+Pointed at internal-only addresses, this reliably reaches things the public internet shouldn't:
+
+- `http://127.0.0.1:PORT/`: internal services bound to loopback
+- `http://169.254.169.254/latest/meta-data/`: cloud metadata endpoints on AWS-hosted instances
+
+Response timing and error-message differences (connection refused vs. timeout vs. 200) are usually enough to fingerprint open ports on the internal network, even without reading response bodies directly.
+
+## 2. `system.multicall` as a brute-force amplifier
+
+XML-RPC supports batching multiple method calls into a single HTTP request via `system.multicall`. Applied to `wp.getUsersBlogs` (or any auth-checking method), this turns one HTTP request into hundreds of login attempts, sidestepping request-rate-based lockouts that only count HTTP requests, not authentication attempts inside them.
+
+## Detection and fix
+
+- Disable `xmlrpc.php` entirely if the site doesn't use Jetpack, remote publishing, or the WordPress mobile app (the common legitimate users of the endpoint).
+- If it must stay enabled, block `pingback.ping` and `pingback.extensions.getPingbacks` specifically via a plugin or web server rule, and rate-limit `system.multicall` bodies by call count.
+- On the network side, egress-filter the webserver so it cannot reach `169.254.169.254` or internal RFC1918 ranges it has no business talking to. That kills the impact even if the endpoint stays open.
+
+This is a fifteen-year-old technique. It still works because `xmlrpc.php` ships enabled by default and most site owners have never heard of it.
