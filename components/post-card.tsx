@@ -11,7 +11,7 @@ export function PostCard({ post }: { post: PostMeta }) {
       <div style={{ aspectRatio: "1200 / 630", background: "#0a0b0d", overflow: "hidden" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={`/${post.slug}/opengraph-image`}
+          src={`/${post.slug}/opengraph-image.png`}
           alt=""
           loading="lazy"
           className="transition-transform duration-300 group-hover:scale-[1.03]"

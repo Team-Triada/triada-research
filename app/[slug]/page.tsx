@@ -64,7 +64,7 @@ export default async function PostPage({ params }: PageProps<"/[slug]">) {
     dateModified: post.date,
     author: { "@type": "Person", name: post.author },
     publisher: organizationSchema,
-    image: `${url}/opengraph-image`,
+    image: `${url}/opengraph-image.png`,
     keywords: post.tags.join(", "),
     isPartOf: { "@id": `${SITE_URL}/#blog` },
   };
