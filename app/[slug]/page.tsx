@@ -143,7 +143,7 @@ export default async function PostPage({ params }: PageProps<"/[slug]">) {
               {newer ? (
                 <Link
                   href={`/${newer.slug}`}
-                  className="card-surface flex flex-col justify-center"
+                  className="card-surface flex min-w-0 flex-col justify-center"
                   style={{ textDecoration: "none", padding: "10px 14px" }}
                 >
                   <span
@@ -153,7 +153,7 @@ export default async function PostPage({ params }: PageProps<"/[slug]">) {
                     ← Newer
                   </span>
                   <span
-                    className="truncate"
+                    className="truncate min-w-0"
                     style={{ color: "#e8eaed", fontSize: 13.5, marginTop: 2 }}
                   >
                     {newer.title}
@@ -165,7 +165,7 @@ export default async function PostPage({ params }: PageProps<"/[slug]">) {
               {older ? (
                 <Link
                   href={`/${older.slug}`}
-                  className="card-surface flex flex-col justify-center sm:items-end sm:text-right"
+                  className="card-surface flex min-w-0 flex-col justify-center sm:items-end sm:text-right"
                   style={{ textDecoration: "none", padding: "10px 14px" }}
                 >
                   <span
@@ -175,7 +175,7 @@ export default async function PostPage({ params }: PageProps<"/[slug]">) {
                     Older →
                   </span>
                   <span
-                    className="truncate"
+                    className="truncate min-w-0"
                     style={{ color: "#e8eaed", fontSize: 13.5, marginTop: 2, maxWidth: "100%" }}
                   >
                     {older.title}
