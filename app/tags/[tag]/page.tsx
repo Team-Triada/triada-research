@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getAllTags, getPostsByTag, getPostsPage, GRID_POSTS_PER_PAGE } from "@/lib/content";
+import { getAllTags, getPostsByTag } from "@/lib/content";
 import { PostGrid } from "@/components/post-grid";
-import { Pagination } from "@/components/pagination";
 import { Container } from "@/components/container";
 import { SITE_URL, breadcrumbSchema } from "@/lib/seo";
 
@@ -25,15 +24,10 @@ export async function generateMetadata({ params }: PageProps<"/tags/[tag]">): Pr
   };
 }
 
-export default async function TagPage({ params, searchParams }: PageProps<"/tags/[tag]">) {
+export default async function TagPage({ params }: PageProps<"/tags/[tag]">) {
   const { tag } = await params;
-  const query = await searchParams;
-  const page = Number(query.page ?? 1) || 1;
-
-  const total = getPostsByTag(tag).length;
-  if (total === 0) notFound();
-
-  const { posts, totalPages } = getPostsPage(page, tag, GRID_POSTS_PER_PAGE);
+  const posts = getPostsByTag(tag);
+  if (posts.length === 0) notFound();
 
   const breadcrumbs = breadcrumbSchema([
     { name: "Research", url: `${SITE_URL}/` },
@@ -72,11 +66,10 @@ export default async function TagPage({ params, searchParams }: PageProps<"/tags
       <span className="section-label">Tag</span>
       <h1 className="heading-section">{tag}</h1>
       <p className="mt-4 text-[15px]" style={{ color: "#a8adb5" }}>
-        {total} post{total === 1 ? "" : "s"}
+        {posts.length} post{posts.length === 1 ? "" : "s"}
       </p>
 
       <PostGrid posts={posts} className="mt-12" />
-      <Pagination currentPage={page} totalPages={totalPages} basePath={`/tags/${tag}`} />
     </Container>
   );
 }

@@ -20,6 +20,7 @@ export function Footer() {
       >
         <div>
           <Link href="/" style={{ textDecoration: "none" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element -- needs a CSS brightness/invert filter next/image doesn't expose cleanly */}
             <img
               src="/images/Triada_typo.png"
               alt="TRIADA"

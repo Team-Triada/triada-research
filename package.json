@@ -4,14 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "build": "next build && node scripts/fix-og-extensions.mjs",
+    "start": "npx serve out",
     "lint": "eslint"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
+    "mermaid": "^12.0.0",
     "next": "16.3.6",
     "next-mdx-remote": "^6.0.0",
     "react": "19.2.8",
@@ -20,10 +21,15 @@
     "rehype-pretty-code": "^0.14.5",
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.1",
-    "shiki": "^4.4.3"
+    "shiki": "^4.4.3",
+    "unist-util-visit": "^5.1.0"
+  },
+  "overrides": {
+    "lodash-es": "^4.17.24"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/mdast": "^4.0.4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

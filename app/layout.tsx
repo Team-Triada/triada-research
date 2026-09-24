@@ -106,6 +106,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className="dark">
       <head>
+        {/*
+          Static export has no server, so this <meta> tag is the only piece
+          of the old next.config.ts headers() that survives. HSTS,
+          X-Frame-Options, and Permissions-Policy have no meta-tag
+          equivalent and GitHub Pages doesn't support custom HTTP headers,
+          so those are simply not enforceable on this host.
+        */}
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content={`default-src 'self'; script-src 'self' 'unsafe-inline'${
+            process.env.NODE_ENV !== "production" ? " 'unsafe-eval'" : ""
+          }; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'`}
+        />
         <link rel="preload" href="/fonts/Telegraf-Regular.woff" as="font" type="font/woff" crossOrigin="anonymous" />
         <script
           type="application/ld+json"

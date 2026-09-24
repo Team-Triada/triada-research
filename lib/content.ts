@@ -52,8 +52,6 @@ function extractToc(content: string): TocEntry[] {
 }
 
 const POSTS_DIR = path.join(process.cwd(), "content", "posts");
-export const POSTS_PER_PAGE = 12;
-export const GRID_POSTS_PER_PAGE = 9;
 
 export function getSlugs(): string[] {
   if (!fs.existsSync(POSTS_DIR)) return [];
@@ -110,18 +108,6 @@ export function getAllPosts(): PostMeta[] {
     .sort((a, b) => (a.date < b.date ? 1 : -1));
 
   return allPostsCache;
-}
-
-export function getPostsPage(
-  page: number,
-  tag?: string,
-  perPage: number = POSTS_PER_PAGE
-): { posts: PostMeta[]; totalPages: number } {
-  const all = tag ? getAllPosts().filter((p) => p.tags.includes(tag)) : getAllPosts();
-  const totalPages = Math.max(1, Math.ceil(all.length / perPage));
-  const safePage = Math.min(Math.max(1, page), totalPages);
-  const start = (safePage - 1) * perPage;
-  return { posts: all.slice(start, start + perPage), totalPages };
 }
 
 export function getAllTags(): { tag: string; count: number }[] {

@@ -6,6 +6,7 @@ import { getPost, getSlugs } from "@/lib/content";
 export const alt = "TRIADA Research";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+export const dynamic = "force-static";
 
 export function generateStaticParams() {
   return getSlugs().map((slug) => ({ slug }));
@@ -34,7 +35,6 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={logoSrc} height={34} style={{ objectFit: "contain" }} alt="" />
           {post.tags[0] && (
             <div

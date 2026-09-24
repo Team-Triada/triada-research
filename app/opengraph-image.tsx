@@ -5,6 +5,7 @@ import { join } from "node:path";
 export const alt = "TRIADA Research";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+export const dynamic = "force-static";
 
 export default async function Image() {
   const logoData = await readFile(join(process.cwd(), "public/images/Triada_typo.png"), "base64");
@@ -25,7 +26,6 @@ export default async function Image() {
           padding: 80,
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={logoSrc} height={40} style={{ objectFit: "contain" }} alt="" />
 
         <div style={{ display: "flex", flexDirection: "column" }}>

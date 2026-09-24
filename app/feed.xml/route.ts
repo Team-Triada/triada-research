@@ -1,7 +1,9 @@
 import { getAllPosts } from "@/lib/content";
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/seo";
 
-export const revalidate = 3600;
+// Static export has no ISR, this generates once at build time like every
+// other route. It updates whenever the site gets rebuilt and redeployed.
+export const dynamic = "force-static";
 
 function escapeXml(value: string): string {
   return value
