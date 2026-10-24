@@ -1,0 +1,55 @@
+# PHP2Shell: Critical PHP RCE Vulnerabilities Explained
+
+On October 21, 2026, the PHP security team released emergency updates for two critical vulnerabilities in the PHP runtime, collectively known as **PHP2Shell**. Tracked as **CVE-2026-109618** and **CVE-2026-109619**, both have a CVSS v4.0 score of **9.2**. Successful exploitation may allow an unauthenticated attacker to execute code remotely or access sensitive process memory. [Official PHP advisory](https://www.php.net/archive/2026.php) · [NHS England alert](https://digital.nhs.uk/cyber-alerts/2026/cc-4875)
+
+## What happened?
+
+PHP powers the server-side logic of many websites and applications. These vulnerabilities affect the **PHP runtime itself**, not one specific WordPress plugin or CMS feature. Updating plugins alone will not fix a vulnerable PHP runtime.
+
+Both issues involve memory handling during error recovery or request cleanup. Under certain conditions, PHP may process internal data that was not fully initialized or that points to memory that has already been freed. Researchers demonstrated that these conditions could be turned into remote code execution. PHP identified Apache `mod_php` as the highest-risk setup because a crafted request can trigger the issue before application code runs. Other web-serving configurations, including PHP-FPM, `php-cgi`, FrankenPHP and LiteSpeed, are also in scope. [PHP security advisory](https://www.php.net/archive/2026.php)
+
+## The two vulnerabilities
+
+- **CVE-2026-109618 — Out-of-memory corruption:** Certain out-of-memory error paths can leave request data partially initialized. During cleanup, PHP may handle that data incorrectly, potentially causing memory corruption and code execution.
+- **CVE-2026-109619 — Stale global state / use-after-free:** Internal state may continue pointing to request memory after that memory has been freed. Later processing can use the stale reference, potentially leading to memory corruption and code execution.
+
+Both are rated **CVSS 9.2**. That does not mean every PHP installation is equally easy to exploit; practical exploitability depends on the runtime build and server configuration.
+
+## Research and observed activity
+
+Public reporting describes coordinated research involving security researchers, PHP maintainers and industry partners. Wiz reported demonstrations of pre-authentication RCE in test deployments of WordPress, Drupal and Joomla. These demonstrations show the potential impact on products using PHP; **they do not prove that those projects or their users were breached**. OpenAI also described AI-assisted vulnerability research as part of the coordinated response. [Wiz research](https://www.wiz.io/blog/php2shell-ai-uncovers-critical-rce-vulnerabilities) · [OpenAI security research response](https://openai.com/)
+
+Threat reporting described suspicious requests against honeypots and security sensors around the disclosure period. Imperva reported significant scanning and attack traffic in the first 24 hours after disclosure. However, request counts and attempted exploits are evidence of targeting, **not proof of successful compromise**. The public sources cited here do not establish a verified list of named organisations successfully breached through PHP2Shell.
+
+## Affected versions
+
+PHP published fixes on October 21, 2026. Update to the corresponding fixed version or a later supported release:
+
+| PHP branch | Fixed version |
+| --- | --- |
+| PHP 8.5 | 8.5.12 |
+| PHP 8.4 | 8.4.27 |
+| PHP 8.3 | 8.3.36 |
+| PHP 8.2 | 8.2.35 |
+
+PHP 8.1 and older are also affected but are end-of-life and do not receive normal upstream security updates. Check with your operating-system or hosting vendor for supported backported fixes, or migrate to a supported branch. Use the [official PHP advisory](https://www.php.net/archive/2026.php) as the source of truth.
+
+## What defenders should do
+
+1. **Inventory PHP runtimes.** Check web servers, containers, hosting environments and appliances that may bundle PHP. Prioritise internet-facing systems.
+2. **Patch urgently.** Install the fixed release provided for your environment, then restart or reload PHP workers and services so the patched runtime is running.
+3. **Review logs and endpoint telemetry.** Investigate unusual requests, unexpected HTTP 500 responses, PHP worker crashes or restarts, suspicious child processes, unexpected files, new accounts and unexplained outbound connections. These are investigation leads, not definitive indicators by themselves.
+4. **Check vendor advisories.** Some applications and appliances bundle their own PHP runtime, so updating the operating-system package may not update every instance.
+5. **Reduce exposure if patching is delayed.** Follow vendor or national cyber authority guidance. If necessary, isolate or temporarily take vulnerable internet-facing systems offline. Configuration changes may reduce some attack paths, but they are not a substitute for the security update.
+
+## Why PHP2Shell matters
+
+PHP2Shell shows why defenders must secure the runtime beneath their applications, not just the application code. A flaw in PHP's memory handling can affect many different products, and public exploit research can increase the risk to unpatched servers. The priority is to find every exposed PHP runtime, apply the correct vendor-supported fix, and investigate suspicious activity without confusing attempted exploitation with a confirmed breach.
+
+## References
+
+- [PHP: Security advisory and fixed releases](https://www.php.net/archive/2026.php)
+- [NHS England: Critical vulnerabilities in PHP](https://digital.nhs.uk/cyber-alerts/2026/cc-4875)
+- [Canadian Centre for Cyber Security: PHP2Shell advisory](https://www.cyber.gc.ca/en/alerts-advisories/al26-026-critical-vulnerabilities-impacting-php-cve-2026-109618-cve-2026-109619)
+- [UK National Cyber Security Centre: Critical security issue affecting PHP](https://www.ncsc.gov.uk/news/critical-security-issue-affecting-php)
+- [Wiz: PHP2Shell research](https://www.wiz.io/blog/php2shell-ai-uncovers-critical-rce-vulnerabilities)
